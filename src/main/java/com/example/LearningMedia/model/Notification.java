@@ -28,12 +28,12 @@ public class Notification {
         LEARNING_PLAN_COMPLETED
     }
     
-    // Default constructor
+   
     public Notification() {
         this.createdAt = LocalDateTime.now();
     }
     
-    // Constructor with required fields
+    // Constructor with required fields for notifications
     public Notification(String userId, String senderId, String senderName, String senderProfilePicture, 
                      String targetId, NotificationType type, String content) {
         this();
@@ -46,7 +46,7 @@ public class Notification {
         this.content = content;
     }
     
-    // Getters and Setters
+    
     public String getId() {
         return id;
     }
