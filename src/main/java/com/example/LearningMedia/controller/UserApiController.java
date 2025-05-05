@@ -25,7 +25,7 @@ public class UserApiController {
     }
     
     /**
-     * Follow a user
+     * Follow a user to system
      */
     @PostMapping("/{userId}/follow")
     public ResponseEntity<Map<String, Object>> followUser(@PathVariable String userId) {
@@ -42,7 +42,7 @@ public class UserApiController {
         
         User currentUser = currentUserOpt.get();
         
-        // Prevent self-following
+        // Prevent self-following (cannot follow yourself)
         if (currentUser.getId().equals(userId)) {
             return ResponseEntity.badRequest().body(Map.of(
                 "success", false,
@@ -115,7 +115,7 @@ public class UserApiController {
     }
     
     /**
-     * Get followers of a user
+     * Get followers of a user (followers list)
      */
     @GetMapping("/{userId}/followers")
     public ResponseEntity<List<User>> getFollowers(@PathVariable String userId) {
@@ -124,7 +124,7 @@ public class UserApiController {
     }
     
     /**
-     * Get users that a user is following
+     * Get users that a user is following (following list)
      */
     @GetMapping("/{userId}/following")
     public ResponseEntity<List<User>> getFollowing(@PathVariable String userId) {
