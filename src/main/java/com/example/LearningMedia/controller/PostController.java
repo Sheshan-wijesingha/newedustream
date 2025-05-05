@@ -91,12 +91,12 @@ public class PostController {
                 return ResponseEntity.badRequest().body("Maximum 3 media files allowed per post");
             }
             
-            // Create the post with description
+            // Create the post with new description
             PostRequest postRequest = new PostRequest();
             postRequest.setDescription(description);
             Post post = postService.createPost(userId, postRequest);
             
-            // Add media files if provided
+            // Add media files if provided (max 3 files)
             if (files != null && !files.isEmpty()) {
                 for (MultipartFile file : files) {
                     postService.addMediaToPost(post.getId(), userId, file);
