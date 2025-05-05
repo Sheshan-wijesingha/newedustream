@@ -27,14 +27,14 @@ public class UserFollow {
         this.createdAt = LocalDateTime.now();
     }
     
-    // Constructor with required fields
+    // Constructor 
     public UserFollow(String followerId, String followingId) {
         this.followerId = followerId;
         this.followingId = followingId;
         this.createdAt = LocalDateTime.now();
     }
     
-    // Getters and Setters
+    
     public String getId() {
         return id;
     }
