@@ -39,17 +39,17 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("Passwords do not match");
             }
             
-            // Check if user is at least 15 years old
+            // Check if user is at least 15 years old Age validation
             if (!registrationDto.isAtLeast15YearsOld()) {
                 return ResponseEntity.badRequest().body("User must be at least 15 years old");
             }
             
-            // Check if email exists
+            // Check if email exists Email validation
             if (userService.existsByEmail(registrationDto.getEmail())) {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
             
-            // Register new user
+            // Register new user to system
             User user = userService.registerNewUser(registrationDto);
             
             Map<String, Object> response = new HashMap<>();
@@ -61,7 +61,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+    // Login user to system
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         try {
@@ -78,7 +78,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
     }
-    
+    // Get current user
     @GetMapping("/user/me")
     public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
