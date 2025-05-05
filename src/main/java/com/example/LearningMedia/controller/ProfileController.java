@@ -84,7 +84,7 @@ public class ProfileController {
             OAuth2User oAuth2User = oauthToken.getPrincipal();
             String email = principal.getName();
             
-            // Get name from OAuth2 attributes
+            // Get name from OAuth2 attributes  
             Map<String, Object> attributes = oAuth2User.getAttributes();
             String name = "";
             
@@ -139,7 +139,7 @@ public class ProfileController {
                     name = attributes.get("given_name") + " " + attributes.get("family_name");
                 }
                 
-                // Create or retrieve user
+                // Create or retrieve user from OAuth2
                 currentUser = userService.processOAuthPostLogin(email, name, oauthToken.getAuthorizedClientRegistrationId());
                 isOwnProfile = currentUser.getId().equals(profileUser.getId());
                 
