@@ -15,9 +15,9 @@ public interface NotificationRepository extends MongoRepository<Notification, St
     // Count unread notifications for a user (unread notifications)
     long countByUserIdAndReadFalse(String userId);
     
-    // Delete notifications by user and target ID
+    // Delete notifications by user and target ID (delete notifications by user and target ID)
     void deleteByUserIdAndTargetId(String userId, String targetId);
     
-    // Delete notifications by user
+    // Delete notifications by user (delete notifications by user)
     void deleteByUserId(String userId);
 } 
