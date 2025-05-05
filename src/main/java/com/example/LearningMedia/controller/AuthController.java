@@ -49,7 +49,7 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
             
-            // Register new user
+            // Register new user to system
             User user = userService.registerNewUser(registrationDto);
             
             Map<String, Object> response = new HashMap<>();
@@ -61,7 +61,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+    // Login user to system
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         try {
@@ -78,7 +78,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
     }
-    
+    // Get current user
     @GetMapping("/user/me")
     public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
