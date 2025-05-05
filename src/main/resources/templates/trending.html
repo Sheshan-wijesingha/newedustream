@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Content - EduStream</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2575fc;
+            --secondary-color: #6a11cb;
+            --accent-color: #00f2fe;
+            --dark-color: #0a0f2c;
+            --light-color: #e6f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #1a1f4c 0%, #0a0f2c 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background */
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 242, 254, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 75% 75%, rgba(106, 17, 203, 0.05) 0%, transparent 25%);
+            z-index: -2;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, white, var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .neo-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .neo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            opacity: 0.5;
+        }
+        
+        /* Trending Card */
+        .trending-card {
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .trending-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .trending-rank {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            opacity: 0.7;
+            line-height: 1;
+        }
+        
+        .trending-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <!-- Background Elements -->
+    <div class="cosmic-bg"></div>
+    <div class="stars"></div>
+    
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="section-title gradient-text">Trending Content</h1>
+                <p class="mb-4">Discover what's popular in the EduStream community right now.</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Sample Trending Content -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="glass-card trending-card p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="trending-rank">#1</span>
+                        <span class="trending-badge"><i class="bi bi-fire"></i> Hot</span>
+                    </div>
+                    <h4>Machine Learning Fundamentals</h4>
+                    <p class="text-muted mb-3">A comprehensive introduction to ML algorithms and applications</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small><i class="bi bi-people-fill"></i> 1.2k learners</small>
+                        <a th:href="@{/dashboard}" class="neo-btn py-2 px-3">View Course</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="glass-card trending-card p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="trending-rank">#2</span>
+                        <span class="trending-badge"><i class="bi bi-arrow-up"></i> Rising</span>
+                    </div>
+                    <h4>Web Development Bootcamp</h4>
+                    <p class="text-muted mb-3">Full-stack development with modern frameworks and tools</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small><i class="bi bi-people-fill"></i> 956 learners</small>
+                        <a th:href="@{/dashboard}" class="neo-btn py-2 px-3">View Course</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="glass-card trending-card p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="trending-rank">#3</span>
+                        <span class="trending-badge"><i class="bi bi-star-fill"></i> Featured</span>
+                    </div>
+                    <h4>Data Science Essentials</h4>
+                    <p class="text-muted mb-3">Learn to analyze and visualize data for actionable insights</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small><i class="bi bi-people-fill"></i> 782 learners</small>
+                        <a th:href="@{/dashboard}" class="neo-btn py-2 px-3">View Course</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 mt-3">
+                <div class="text-center">
+                    <a th:href="@{/dashboard}" class="neo-btn">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create star elements randomly
+            const stars = document.querySelector('.stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                stars.appendChild(star);
+            }
+        });
+    </script>
+</body>
+</html> 

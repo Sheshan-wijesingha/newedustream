@@ -496,4 +496,30 @@ public class ViewController {
         
         return "notifications";
     }
+    
+    // Add a bookmarks page
+    @GetMapping("/bookmarks")
+    public String showBookmarks(Model model, Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || 
+                auth.getName().equals("anonymousUser")) {
+            return "redirect:/login";
+        }
+        
+        addCommonAttributes(model, auth);
+        
+        return "bookmarks";
+    }
+    
+    // Add a trending page
+    @GetMapping("/trending")
+    public String showTrending(Model model, Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || 
+                auth.getName().equals("anonymousUser")) {
+            return "redirect:/login";
+        }
+        
+        addCommonAttributes(model, auth);
+        
+        return "trending";
+    }
 } 
