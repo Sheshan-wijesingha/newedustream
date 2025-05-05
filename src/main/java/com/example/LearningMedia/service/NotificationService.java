@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface NotificationService {
     
-    // Create a notification when someone likes a post
+    // Create a notification when someone likes a post (create post like notification)
     Notification createPostLikeNotification(String postId, String likerId);
     
-    // Create a notification when someone comments on a post
+    // Create a notification when someone comments on a post (create post comment notification)
     Notification createPostCommentNotification(String postId, String commenterId, String commentContent);
     
     // Create a notification when a learning plan is completed
