@@ -152,7 +152,7 @@ public class ProfileController {
                 currentUser = currentUserOpt.get();
                 isOwnProfile = currentUser.getId().equals(profileUser.getId());
                 
-                // Set following status if not own profile
+                // Set following status 
                 if (!isOwnProfile) {
                     model.addAttribute("isFollowing", 
                             userService.isFollowing(currentUser.getId(), profileUser.getId()));
@@ -163,7 +163,7 @@ public class ProfileController {
         return showProfilePage(model, profileUser, isOwnProfile, currentUser);
     }
 
-    // View profile by user ID
+    // View profile by user ID (system generated)
     @GetMapping("/user/{userId}")
     public String viewProfileById(@PathVariable String userId, Model model, Principal principal) {
         Optional<User> profileUserOpt = userService.findById(userId);
