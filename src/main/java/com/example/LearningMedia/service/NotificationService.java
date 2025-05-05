@@ -18,19 +18,19 @@ public interface NotificationService {
     // Create a notification when a learning plan is completed
     Notification createLearningPlanCompletedNotification(String learningPlanId, String userId);
     
-    // Get notifications for a user
+    // Get notifications for a user (get user notifications)
     Page<Notification> getUserNotifications(String userId, Pageable pageable);
     
-    // Mark a notification as read
+    // Mark a notification as read (mark notification as read)
     Notification markNotificationAsRead(String notificationId);
     
-    // Mark all notifications as read for a user
+    // Mark all notifications as read for a user (mark all notifications as read for a user)
     void markAllNotificationsAsRead(String userId);
     
-    // Count unread notifications for a user
+    // Count unread notifications for a user (count unread notifications for a user)
     long countUnreadNotifications(String userId);
     
-    // Delete a notification
+    // Delete a notification (delete notification)
     void deleteNotification(String notificationId, String userId);
     
     /**
