@@ -73,7 +73,7 @@ public class SecurityConfig {
             .permitAll()
         );
         
-        // OAuth2 login configuration
+        // OAuth2 login configuration supports Google and Facebook
         http.oauth2Login(oauth2 -> oauth2
             .loginPage("/login")
             .successHandler(successHandler)
