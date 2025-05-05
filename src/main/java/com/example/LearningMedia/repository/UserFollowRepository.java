@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+// User follow repository
 @Repository
 public interface UserFollowRepository extends MongoRepository<UserFollow, String> {
     
