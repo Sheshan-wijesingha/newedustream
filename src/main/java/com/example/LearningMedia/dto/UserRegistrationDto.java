@@ -31,7 +31,7 @@ public class UserRegistrationDto {
     @NotBlank(message = "Password confirmation is required")
     private String confirmPassword;
     
-    // Default constructor
+    // Default 
     public UserRegistrationDto() {
     }
     
@@ -47,7 +47,7 @@ public class UserRegistrationDto {
         this.confirmPassword = confirmPassword;
     }
     
-    // Getters and Setters
+   
     public String getFirstName() {
         return firstName;
     }
