@@ -141,7 +141,7 @@ public class PostResponse {
         }
     }
     
-    // Getters and setters
+    
     public String getId() {
         return id;
     }

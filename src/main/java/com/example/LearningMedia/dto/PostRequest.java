@@ -27,3 +27,4 @@ public class PostRequest {
         this.mediaIds = mediaIds;
     }
 } 
+// Post request DTO (description and media IDs)
