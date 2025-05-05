@@ -208,14 +208,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             return postService.getPostById(postId)
@@ -238,14 +238,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            // Find the user by email first to get the actual user ID   
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             Post post = postService.addMediaToPost(postId, userId, file);
