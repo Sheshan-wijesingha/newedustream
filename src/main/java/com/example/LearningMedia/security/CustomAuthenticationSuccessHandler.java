@@ -39,7 +39,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             logger.info("Form-based authentication successful for user: " + email);
         }
         
-        // Redirect to the default success URL
+        // Redirect to the success URL
         super.onAuthenticationSuccess(request, response, authentication);
     }
 } 
