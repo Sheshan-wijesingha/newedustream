@@ -49,7 +49,7 @@ public class ViewController {
                 User user = userOpt.get();
                 model.addAttribute("currentUser", user);
                 
-                // Add notification count
+                // Add notification count to current user
                 long unreadNotificationCount = notificationService.countUnreadNotifications(user.getId());
                 model.addAttribute("unreadNotificationCount", unreadNotificationCount);
             }
@@ -79,6 +79,7 @@ public class ViewController {
         return "register";
     }
     
+    // Feed page
     @GetMapping("/feed")
     public String feed(Model model, Authentication auth) {
         addCommonAttributes(model, auth);
@@ -90,7 +91,8 @@ public class ViewController {
         
         return "feed";
     }
-    
+
+    // Dashboard page
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication auth) {
         addCommonAttributes(model, auth);
@@ -151,7 +153,7 @@ public class ViewController {
         return "dashboard";
     }
     
-    // Learning plans page
+    // Learning plans page (user's learning plans)
     @GetMapping("/learning-plans")
     public String learningPlans(Model model, Authentication auth) {
         addCommonAttributes(model, auth);
