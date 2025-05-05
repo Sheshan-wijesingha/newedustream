@@ -101,7 +101,7 @@ public class NotificationController {
                     .body("Failed to count unread notifications: " + e.getMessage());
         }
     }
-    
+    // Mark notification as read
     @PutMapping("/{notificationId}/read")
     public ResponseEntity<?> markNotificationAsRead(@PathVariable String notificationId) {
         try {
@@ -127,7 +127,7 @@ public class NotificationController {
                     .body("Failed to mark notification as read: " + e.getMessage());
         }
     }
-    
+    // Mark all notifications as read
     @PutMapping("/read-all")
     public ResponseEntity<?> markAllNotificationsAsRead() {
         try {
