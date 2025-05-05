@@ -26,13 +26,13 @@ public class OAuth2Config {
     public ClientRegistrationRepository clientRegistrationRepository() {
         List<ClientRegistration> registrations = new ArrayList<>();
         
-        // Add Google registration
+        // Add Google registration for demo purposes
         ClientRegistration googleRegistration = googleClientRegistration();
         if (googleRegistration != null) {
             registrations.add(googleRegistration);
         }
         
-        // Add Facebook registration
+        // Add Facebook registration for demo purposes
         ClientRegistration facebookRegistration = facebookClientRegistration();
         if (facebookRegistration != null) {
             registrations.add(facebookRegistration);
