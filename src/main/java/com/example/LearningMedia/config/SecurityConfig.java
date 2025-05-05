@@ -53,7 +53,7 @@ public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Disable CSRF for REST APIs
+        // Disable CSRF for REST APIs for demo purposes
         http.csrf(csrf -> csrf.disable());
         
         // Authentication and authorization
@@ -65,7 +65,7 @@ public class SecurityConfig {
             .anyRequest().authenticated()
         );
         
-        // Form login configuration
+        // Form login 
         http.formLogin(form -> form
             .loginPage("/login")
             .defaultSuccessUrl("/dashboard")
