@@ -125,14 +125,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             Pageable pageable = PageRequest.of(page, size);
@@ -182,14 +182,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+        
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from the system
             String currentUserId = userOptional.get().getId();
             
             Pageable pageable = PageRequest.of(page, size);
