@@ -14,11 +14,10 @@ public class NotificationResponse {
     private boolean read;
     private LocalDateTime createdAt;
     
-    // Default constructor
     public NotificationResponse() {
     }
     
-    // Factory method to convert from Notification entity
+    // Factory method to convert from Notification entity to NotificationResponse
     public static NotificationResponse fromNotification(Notification notification) {
         NotificationResponse response = new NotificationResponse();
         response.setId(notification.getId());
