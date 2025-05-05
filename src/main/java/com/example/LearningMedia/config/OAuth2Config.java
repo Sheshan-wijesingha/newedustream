@@ -45,7 +45,7 @@ public class OAuth2Config {
         String clientId = env.getProperty("spring.security.oauth2.client.registration.google.client-id");
         String clientSecret = env.getProperty("spring.security.oauth2.client.registration.google.client-secret");
         
-        // For demo purposes, if no client ID is provided, use test values
+        // For demo purposes, 
         if (clientId == null || clientId.equals("YOUR_GOOGLE_CLIENT_ID")) {
             clientId = "demo-client-id";
             clientSecret = "demo-client-secret";
@@ -71,7 +71,7 @@ public class OAuth2Config {
         String clientId = env.getProperty("spring.security.oauth2.client.registration.facebook.client-id");
         String clientSecret = env.getProperty("spring.security.oauth2.client.registration.facebook.client-secret");
         
-        // Skip if demo credentials
+        // Skip if demo credentials (for demo purposes)
         if (clientId == null || clientId.equals("DEMO-FB-APP-ID")) {
             return null;
         }
