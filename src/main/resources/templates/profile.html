@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Learning Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%) !important;
+            padding: 15px 20px;
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .profile-pic-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .profile-pic-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #4481eb;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-pic-upload:hover {
+            transform: scale(1.1);
+        }
+        
+        .nav-pills .nav-link {
+            color: #4481eb;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #4481eb;
+            box-shadow: 0 0 0 0.25rem rgba(68, 129, 235, 0.25);
+            background-color: white;
+        }
+        
+        .alert-success {
+            border-radius: 10px;
+            background-color: rgba(25, 135, 84, 0.1);
+            border-color: rgba(25, 135, 84, 0.2);
+            color: #198754;
+        }
+        
+        .alert-danger {
+            border-radius: 10px;
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+        
+        /* Style for the bg-primary to match the gradient */
+        .bg-primary {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the standard navigation bar fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-person-gear me-2"></i>Profile Settings
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-pic-container">
+                            <img th:if="${user != null && user.profilePicture != null}" th:src="${user.profilePicture}" alt="Profile Picture" class="profile-pic">
+                            <i th:unless="${user != null && user.profilePicture != null}" class="bi bi-person-circle profile-pic" style="font-size: 150px; color: #4481eb; display: flex; justify-content: center; align-items: center;"></i>
+                            <label for="profile-pic-input" class="profile-pic-upload">
+                                <i class="bi bi-camera"></i>
+                            </label>
+                        </div>
+                        <h5 class="text-center mb-4" th:text="${user != null ? (user.firstName != null ? user.firstName : '') + ' ' + (user.lastName != null ? user.lastName : '') : 'User'}">User Name</h5>
+                        
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true">
+                                <i class="bi bi-person me-2"></i>General Information
+                            </button>
+                            <button class="nav-link" id="v-pills-security-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security" aria-selected="false">
+                                <i class="bi bi-shield-lock me-2"></i>Password & Security
+                            </button>
+                            <button class="nav-link" id="v-pills-posts-tab" data-bs-toggle="pill" data-bs-target="#v-pills-posts" type="button" role="tab" aria-controls="v-pills-posts" aria-selected="false">
+                                <i class="bi bi-file-post me-2"></i>My Posts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-gear me-2"></i>Edit Your Profile
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <!-- Profile Information Tab -->
+                            <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-check-circle me-2"></i> <span th:text="${success}">Success message</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-exclamation-circle me-2"></i> <span th:text="${error}">Error message</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                
+                                <form th:action="@{/profile/update}" method="post" th:object="${user}">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="firstName" name="firstName" th:value="${user != null && user.firstName != null ? user.firstName : ''}" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="lastName" name="lastName" th:value="${user != null && user.lastName != null ? user.lastName : ''}" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" name="email" th:value="${user != null && user.email != null ? user.email : ''}" required readonly>
+                                        <div class="form-text">Email address cannot be changed</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" th:value="${user != null && user.dateOfBirth != null ? user.dateOfBirth : ''}" required>
+                                    </div>
+                                    
+                                    <input type="hidden" name="profilePicture" th:value="${user != null && user.profilePicture != null ? user.profilePicture : ''}">
+                                    
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-save me-2"></i>Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Password & Security Tab -->
+                            <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab">
+                                <div th:if="${passwordSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-check-circle me-2"></i> <span th:text="${passwordSuccess}">Success message</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                
+                                <div th:if="${passwordError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-exclamation-circle me-2"></i> <span th:text="${passwordError}">Error message</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                
+                                <form th:action="@{/profile/update-password}" method="post">
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-shield-lock me-2"></i>Update Password
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Posts Tab -->
+                            <div class="tab-pane fade" id="v-pills-posts" role="tabpanel" aria-labelledby="v-pills-posts-tab">
+                                <h5 class="mb-3">Your Posts</h5>
+                                
+                                <div id="user-posts-container">
+                                    <div class="text-center my-4" id="posts-loading">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2">Loading your posts...</p>
+                                    </div>
+                                    
+                                    <div id="no-posts-message" style="display: none;">
+                                        <div class="card p-4 text-center">
+                                            <i class="bi bi-emoji-neutral fs-1 text-muted mb-2"></i>
+                                            <h5>No Posts Yet</h5>
+                                            <p class="text-muted">You haven't shared any posts yet.</p>
+                                            <a href="/feed" class="btn btn-primary">Create Your First Post</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden file input for profile picture upload -->
+    <form id="profile-pic-form" th:action="@{/profile/upload-picture}" method="post" enctype="multipart/form-data" style="display: none;">
+        <input type="file" id="profile-pic-input" name="profilePicture" accept="image/*">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-submit form when user selects a file
+        document.getElementById('profile-pic-input').addEventListener('change', function() {
+            document.getElementById('profile-pic-form').submit();
+        });
+    </script>
+    
+    <!-- Upload profile picture handler -->
+    <form id="profile-picture-form" style="display: none;" method="post" enctype="multipart/form-data" th:action="@{/profile/picture}">
+        <input type="file" id="profile-pic-input" name="file" accept="image/*"/>
+    </form>
+    
+    <script th:inline="javascript">
+        // Get CSRF token
+        const token = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+        const header = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const profilePicInput = document.getElementById('profile-pic-input');
+            
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', function() {
+                    document.getElementById('profile-picture-form').submit();
+                });
+            }
+            
+            // Load user's posts when the posts tab is shown
+            const postsTab = document.getElementById('v-pills-posts-tab');
+            if (postsTab) {
+                postsTab.addEventListener('shown.bs.tab', loadUserPosts);
+            }
+        });
+        
+        // Load user's posts
+        function loadUserPosts() {
+            const postsContainer = document.getElementById('user-posts-container');
+            const loadingIndicator = document.getElementById('posts-loading');
+            const noPostsMessage = document.getElementById('no-posts-message');
+            
+            if (!postsContainer) return;
+            
+            // Clear previous posts but keep loading indicator
+            const existingPosts = postsContainer.querySelectorAll('.post-card');
+            existingPosts.forEach(post => post.remove());
+            
+            // Show loading indicator
+            if (loadingIndicator) loadingIndicator.style.display = 'block';
+            if (noPostsMessage) noPostsMessage.style.display = 'none';
+            
+            // Set headers
+            const headers = {};
+            if (token && header) {
+                headers[header] = token;
+            }
+            
+            // Fetch user's posts
+            fetch('/profile/posts', {
+                method: 'GET',
+                headers: headers
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load posts');
+                }
+                return response.json();
+            })
+            .then(posts => {
+                // Hide loading indicator
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+                
+                // Check if there are posts
+                if (!posts || posts.length === 0) {
+                    if (noPostsMessage) noPostsMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Create posts elements
+                posts.forEach(post => {
+                    renderPost(postsContainer, post);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading posts:', error);
+                // Hide loading indicator
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+                
+                // Show error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = 'Error loading posts: ' + error.message;
+                postsContainer.appendChild(errorDiv);
+            });
+        }
+        
+        // Render a post
+        function renderPost(container, post) {
+            const postCard = document.createElement('div');
+            postCard.className = 'card mb-3 post-card';
+            
+            // Create media HTML if any
+            let mediaHtml = '';
+            if (post.mediaItems && post.mediaItems.length > 0) {
+                post.mediaItems.forEach(media => {
+                    if (media.type === 'image') {
+                        mediaHtml += `<img src="${media.url}" class="card-img-top" alt="Post image" style="max-height: 300px; object-fit: contain;">`;
+                    } else if (media.type === 'video') {
+                        mediaHtml += `<video class="card-img-top" controls style="max-height: 300px;">
+                                        <source src="${media.url}" type="${media.contentType}">
+                                        Your browser does not support the video tag.
+                                      </video>`;
+                    }
+                });
+            }
+            
+            postCard.innerHTML = `
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">${formatDate(post.createdAt)}</small>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="editPost('${post.id}')">Edit</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="deletePost('${post.id}')">Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    ${mediaHtml}
+                    <p class="card-text mt-2">${post.description || ''}</p>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-sm" disabled>
+                            <i class="bi bi-chat"></i> ${post.commentCount || 0}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(postCard);
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return dateString;
+            }
+        }
+        
+        // Delete a post
+        function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
+            
+            // Set headers
+            const headers = {};
+            if (token && header) {
+                headers[header] = token;
+            }
+            
+            fetch(`/api/posts/${postId}`, {
+                method: 'DELETE',
+                headers: headers
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete post');
+                }
+                return response.text();
+            })
+            .then(() => {
+                showAlert('Post deleted successfully!', 'success');
+                loadUserPosts();
+            })
+            .catch(error => {
+                showAlert('Error deleting post: ' + error.message, 'danger');
+            });
+        }
+        
+        // Edit a post
+        function editPost(postId) {
+            // Set headers
+            const headers = {};
+            if (token && header) {
+                headers[header] = token;
+            }
+            
+            // Get post details
+            fetch(`/api/posts/${postId}`, {
+                method: 'GET',
+                headers: headers
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load post details');
+                }
+                return response.json();
+            })
+            .then(post => {
+                // Create modal
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.id = 'editPostModal';
+                modal.setAttribute('tabindex', '-1');
+                
+                // Create media preview HTML
+                let mediaPreviewHtml = '';
+                if (post.mediaItems && post.mediaItems.length > 0) {
+                    mediaPreviewHtml = '<div class="mb-3"><label class="form-label">Current Media</label><div class="d-flex flex-wrap gap-2">';
+                    post.mediaItems.forEach(media => {
+                        if (media.type === 'image') {
+                            mediaPreviewHtml += `
+                                <div class="position-relative" style="width: 100px; height: 100px;">
+                                    <img src="${media.url}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" 
+                                        onclick="removeMedia('${postId}', '${media.id}')" title="Remove media">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>`;
+                        } else if (media.type === 'video') {
+                            mediaPreviewHtml += `
+                                <div class="position-relative" style="width: 100px; height: 100px;">
+                                    <video style="width: 100px; height: 100px; object-fit: cover;">
+                                        <source src="${media.url}" type="${media.contentType}">
+                                    </video>
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" 
+                                        onclick="removeMedia('${postId}', '${media.id}')" title="Remove media">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    });
+                    mediaPreviewHtml += '</div></div>';
+                }
+                
+                modal.innerHTML = `
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Post</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editPostForm">
+                                    <div class="mb-3">
+                                        <label for="editPostDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="editPostDescription" rows="3">${post.description || ''}</textarea>
+                                    </div>
+                                    
+                                    ${mediaPreviewHtml}
+                                    
+                                    <div class="mb-3">
+                                        <label for="editPostMedia" class="form-label">Add New Media</label>
+                                        <input type="file" class="form-control" id="editPostMedia" accept="image/*,video/*" multiple>
+                                        <div class="form-text">You can add up to 3 media items in total. Only images and videos are allowed.</div>
+                                    </div>
+                                    
+                                    <div id="editMediaPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="updatePost('${postId}')">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Show modal
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+                
+                // Setup media preview
+                const mediaInput = document.getElementById('editPostMedia');
+                if (mediaInput) {
+                    mediaInput.addEventListener('change', function() {
+                        previewEditMedia(this.files);
+                    });
+                }
+                
+                // Clean up on hide
+                modal.addEventListener('hidden.bs.modal', function() {
+                    document.body.removeChild(modal);
+                });
+            })
+            .catch(error => {
+                showAlert('Error loading post: ' + error.message, 'danger');
+            });
+        }
+        
+        // Preview media files in edit form
+        function previewEditMedia(files) {
+            const previewContainer = document.getElementById('editMediaPreview');
+            if (!previewContainer) return;
+            
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+            
+            // Create previews
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const preview = document.createElement('div');
+                preview.className = 'position-relative';
+                preview.style.width = '100px';
+                preview.style.height = '100px';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.className = 'img-thumbnail';
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    preview.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.style.width = '100px';
+                    video.style.height = '100px';
+                    video.style.objectFit = 'cover';
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        video.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    preview.appendChild(video);
+                }
+                
+                previewContainer.appendChild(preview);
+            }
+        }
+        
+        // Remove media from post
+        function removeMedia(postId, mediaId) {
+            if (!confirm('Are you sure you want to remove this media?')) {
+                return;
+            }
+            
+            // Set headers
+            const headers = {};
+            if (token && header) {
+                headers[header] = token;
+            }
+            
+            fetch(`/api/posts/${postId}/media/${mediaId}`, {
+                method: 'DELETE',
+                headers: headers
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to remove media');
+                }
+                return response.text();
+            })
+            .then(() => {
+                // Refresh the modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editPostModal'));
+                if (modal) modal.hide();
+                
+                setTimeout(() => {
+                    editPost(postId);
+                }, 300);
+                
+                showAlert('Media removed successfully', 'success');
+            })
+            .catch(error => {
+                showAlert('Error removing media: ' + error.message, 'danger');
+            });
+        }
+        
+        // Update a post
+        function updatePost(postId) {
+            const description = document.getElementById('editPostDescription').value.trim();
+            const mediaFiles = document.getElementById('editPostMedia').files;
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('description', description);
+            
+            // Add media files
+            for (let i = 0; i < mediaFiles.length; i++) {
+                formData.append('files', mediaFiles[i]);
+            }
+            
+            // Set headers
+            const headers = {};
+            if (token && header) {
+                headers[header] = token;
+            }
+            
+            // If there are new media files, use the media endpoint
+            if (mediaFiles.length > 0) {
+                fetch(`/api/posts/${postId}/update-with-media`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update post');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPostModal'));
+                    if (modal) modal.hide();
+                    
+                    showAlert('Post updated successfully!', 'success');
+                    loadUserPosts();
+                })
+                .catch(error => {
+                    showAlert('Error updating post: ' + error.message, 'danger');
+                });
+            } else {
+                // Just update the description
+                fetch(`/api/posts/${postId}`, {
+                    method: 'PUT',
+                    headers: {
+                        ...headers,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description: description })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update post');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPostModal'));
+                    if (modal) modal.hide();
+                    
+                    showAlert('Post updated successfully!', 'success');
+                    loadUserPosts();
+                })
+                .catch(error => {
+                    showAlert('Error updating post: ' + error.message, 'danger');
+                });
+            }
+        }
+        
+        // Show an alert message
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Find a good place to show the alert
+            const container = document.getElementById('user-posts-container');
+            if (container) {
+                container.prepend(alertDiv);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html> 
