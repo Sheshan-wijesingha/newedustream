@@ -45,14 +45,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            // Find the user by email first to get the actual user ID (OAuth2)
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID (OAuth2)
             String userId = userOptional.get().getId();
             
             Post post = postService.createPost(userId, postRequest);
@@ -76,27 +76,27 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the user ID (OAuth2)
             String userId = userOptional.get().getId();
             
-            // Validate number of files
+            // Validate number of files uploaded
             if (files != null && files.size() > 3) {
                 return ResponseEntity.badRequest().body("Maximum 3 media files allowed per post");
             }
             
-            // Create the post with description
+            // Create the post with new description
             PostRequest postRequest = new PostRequest();
             postRequest.setDescription(description);
             Post post = postService.createPost(userId, postRequest);
             
-            // Add media files if provided
+            // Add media files if provided (max 3 files)
             if (files != null && !files.isEmpty()) {
                 for (MultipartFile file : files) {
                     postService.addMediaToPost(post.getId(), userId, file);
@@ -125,14 +125,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             Pageable pageable = PageRequest.of(page, size);
@@ -182,14 +182,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+        
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from the system
             String currentUserId = userOptional.get().getId();
             
             Pageable pageable = PageRequest.of(page, size);
@@ -208,14 +208,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             return postService.getPostById(postId)
@@ -238,14 +238,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            // Find the user by email first to get the actual user ID   
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             Post post = postService.addMediaToPost(postId, userId, file);
@@ -276,7 +276,7 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             postService.deleteMediaFromPost(postId, mediaId, userId);
@@ -294,14 +294,14 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
             }
             
-            // Get the actual user ID
+            // Get the actual user ID from system
             String userId = userOptional.get().getId();
             
             boolean deleted = postService.deletePost(postId, userId);
@@ -325,7 +325,7 @@ public class PostController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             
-            // Find the user by email first to get the actual user ID
+            // Find the user by email first to get the actual user ID from system
             Optional<User> userOptional = userService.findByEmail(email);
             
             if (userOptional.isEmpty()) {

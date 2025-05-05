@@ -23,7 +23,7 @@ public class PostResponse {
     private String timeAgo;
     private boolean canEdit;
     
-    // Add like-related fields
+    
     private int likeCount;
     private boolean likedByCurrentUser;
     
