@@ -24,17 +24,17 @@ public interface NotificationService {
     // Mark a notification as read (mark notification as read)
     Notification markNotificationAsRead(String notificationId);
     
-    // Mark all notifications as read for a user (mark all notifications as read for a user)
+    // Mark all notifications as read for a user 
     void markAllNotificationsAsRead(String userId);
     
     // Count unread notifications for a user (count unread notifications for a user)
     long countUnreadNotifications(String userId);
     
-    // Delete a notification (delete notification)
+    // Delete a notification 
     void deleteNotification(String notificationId, String userId);
     
     /**
-     * Delete all notifications for a specific user
+     * 
      * 
      * @param userId The ID of the user whose notifications will be deleted
      */
