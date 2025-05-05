@@ -154,7 +154,7 @@ public class NotificationController {
                     .body("Failed to mark all notifications as read: " + e.getMessage());
         }
     }
-    
+    // Delete notification
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<?> deleteNotification(@PathVariable String notificationId) {
         try {
