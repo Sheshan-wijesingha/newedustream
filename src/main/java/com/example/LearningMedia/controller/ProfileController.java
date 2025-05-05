@@ -42,7 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+// Profile controller
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -66,7 +66,7 @@ public class ProfileController {
         this.notificationService = notificationService;
     }
     
-    // View own profile
+    // View own profile details
     @GetMapping
     public String viewOwnProfile(Model model, Principal principal) {
         if (principal == null) {
