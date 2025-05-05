@@ -42,7 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+// Profile controller
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -66,7 +66,7 @@ public class ProfileController {
         this.notificationService = notificationService;
     }
     
-    // View own profile
+    // View own profile details
     @GetMapping
     public String viewOwnProfile(Model model, Principal principal) {
         if (principal == null) {
@@ -84,7 +84,7 @@ public class ProfileController {
             OAuth2User oAuth2User = oauthToken.getPrincipal();
             String email = principal.getName();
             
-            // Get name from OAuth2 attributes
+            // Get name from OAuth2 attributes  
             Map<String, Object> attributes = oAuth2User.getAttributes();
             String name = "";
             
@@ -139,7 +139,7 @@ public class ProfileController {
                     name = attributes.get("given_name") + " " + attributes.get("family_name");
                 }
                 
-                // Create or retrieve user
+                // Create or retrieve user from OAuth2
                 currentUser = userService.processOAuthPostLogin(email, name, oauthToken.getAuthorizedClientRegistrationId());
                 isOwnProfile = currentUser.getId().equals(profileUser.getId());
                 
