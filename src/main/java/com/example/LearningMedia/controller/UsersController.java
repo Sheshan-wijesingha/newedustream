@@ -42,7 +42,7 @@ public class UsersController {
             return "redirect:/login";
         }
 
-        // Get current user
+        // Get current user discovery page
         Optional<User> currentUserOpt = userService.findByEmail(principal.getName());
         if (currentUserOpt.isEmpty()) {
             return "redirect:/login";
@@ -51,7 +51,7 @@ public class UsersController {
         User currentUser = currentUserOpt.get();
         model.addAttribute("currentUser", currentUser);
         
-        // Add notification count
+        // Add notification count to current user discovery page
         long unreadNotificationCount = notificationService.countUnreadNotifications(currentUser.getId());
         model.addAttribute("unreadNotificationCount", unreadNotificationCount);
         
