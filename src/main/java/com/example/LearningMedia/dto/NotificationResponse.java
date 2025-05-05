@@ -32,7 +32,7 @@ public class NotificationResponse {
         return response;
     }
     
-    // Getters and Setters
+    
     public String getId() {
         return id;
     }
