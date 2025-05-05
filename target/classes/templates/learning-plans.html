@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Plans - EduStream</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/feed.css">
+    <style>
+        :root {
+            --primary-color: #2575fc;
+            --secondary-color: #6a11cb;
+            --accent-color: #00f2fe;
+            --dark-color: #0a0f2c;
+            --light-color: #e6f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-color);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+        
+        /* Animated background elements */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 2s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .particle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 50%;
+            left: 60%;
+            animation-delay: 4s;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .particle:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            left: 70%;
+            animation-delay: 6s;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .particle:nth-child(5) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 50%;
+            animation-delay: 8s;
+            background: rgba(255, 255, 255, 0.07);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-30px) translateX(15px);
+            }
+            50% {
+                transform: translateY(0) translateX(30px);
+            }
+            75% {
+                transform: translateY(30px) translateX(15px);
+            }
+        }
+        
+        .navbar {
+            background: transparent !important;
+            padding: 15px 0;
+            box-shadow: none;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-link {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 2px;
+            background: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 70%;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+            background: linear-gradient(to right, #ffffff, var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+        
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s ease;
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%) !important;
+            padding: 20px 25px;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+            color: white !important;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .card-body {
+            padding: 25px;
+            color: white;
+        }
+        
+        .resource-url {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .topic-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.2);
+            outline: none;
+            color: white;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .deadline-approaching {
+            background-color: rgba(255, 100, 100, 0.1);
+            border: 1px solid rgba(255, 100, 100, 0.2);
+        }
+        
+        .plan-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            border-radius: 30px;
+            font-size: 0.8rem;
+            padding: 5px 15px;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .topic-completed {
+            background-color: rgba(100, 255, 100, 0.1) !important;
+            border: 1px solid rgba(100, 255, 100, 0.2) !important;
+        }
+        
+        .topic-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .completion-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+        
+        .plan-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .continue-learning-btn {
+            background: linear-gradient(135deg, #00c853 0%, #64dd17 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 200, 83, 0.2);
+        }
+        
+        .continue-learning-btn:hover {
+            background: linear-gradient(135deg, #00c853 0%, #64dd17 80%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 200, 83, 0.3);
+            color: white;
+        }
+        
+        .learning-plan-detail-view {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--glass-shadow);
+            margin-top: 20px;
+            display: none;
+            border: 1px solid var(--glass-border);
+            color: white;
+        }
+        
+        .back-to-plans-btn {
+            margin-bottom: 20px;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-plans-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        /* Modal styling */
+        .modal-content {
+            background: var(--dark-color);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .modal-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+            transform: translateY(-2px);
+        }
+        
+        .form-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        /* Added glow effect for cards */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            z-index: -1;
+            border-radius: 22px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 0.5;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <!-- Replace with the navbar fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div class="container mt-5">
+        <div class="page-header animate__animated animate__fadeInDown">
+            <h2 class="page-title">Your Learning Journey</h2>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPlanModal">
+                <i class="bi bi-plus-circle"></i> Create New Plan
+            </button>
+        </div>
+        
+        <!-- Learning Plans List View -->
+        <div id="learning-plans-list">
+            <div class="row" id="plans-container">
+                <!-- Plans will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Learning Plan Detail View -->
+        <div id="learning-plan-detail" class="learning-plan-detail-view">
+            <button id="back-to-plans-btn" class="btn back-to-plans-btn">
+                <i class="bi bi-arrow-left"></i> Back to Plans
+            </button>
+            
+            <h3 id="plan-detail-title" class="mb-3" style="color: white;">Plan Title</h3>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="progress-info">
+                    <div class="completion-text"><span id="plan-completed-topics">0</span> of <span id="plan-total-topics">0</span> topics completed</div>
+                    <div class="progress">
+                        <div id="plan-progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="deadline-info">
+                    <small style="color: rgba(255, 255, 255, 0.7);">Deadline: <span id="plan-deadline">N/A</span></small>
+                </div>
+            </div>
+            
+            <div id="plan-topics-container" class="mt-4">
+                <!-- Topics will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Plan Modal -->
+    <div class="modal fade" id="createPlanModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Learning Plan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createPlanForm">
+                        <div class="mb-3">
+                            <label for="planTitle" class="form-label">Plan Title</label>
+                            <input type="text" class="form-control" id="planTitle" required placeholder="e.g., Web Development Fundamentals">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="deadline" class="form-label">Deadline</label>
+                            <input type="date" class="form-control" id="deadline" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Topics</label>
+                            <div id="topicsContainer">
+                                <!-- Topics will be added here dynamically -->
+                            </div>
+                            <button type="button" class="btn btn-outline-primary mt-2" id="addTopicBtn">
+                                <i class="bi bi-plus-circle"></i> Add Topic
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="createPlanBtn">Create Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Plan Modal -->
+    <div class="modal fade" id="editPlanModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Learning Plan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editLearningPlanForm">
+                        <input type="hidden" id="editPlanId">
+                        <div class="mb-3">
+                            <label for="editPlanTitle" class="form-label">Plan Title</label>
+                            <input type="text" class="form-control" id="editPlanTitle" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editDeadline" class="form-label">Deadline</label>
+                            <input type="date" class="form-control" id="editDeadline" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Topics</label>
+                            <div id="editTopicsContainer">
+                                <!-- Edit topics will be added here dynamically -->
+                            </div>
+                            <button type="button" class="btn btn-outline-primary mt-2" id="editAddTopicBtn">
+                                <i class="bi bi-plus-circle"></i> Add Topic
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEditBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic Template (hidden) -->
+    <template id="topicTemplate">
+        <div class="topic-card">
+            <div class="mb-3">
+                <label class="form-label">Topic Name</label>
+                <input type="text" class="form-control topic-name" required placeholder="e.g., HTML Basics">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Resource URLs</label>
+                <div class="resource-urls-container">
+                    <div class="input-group mb-2">
+                        <input type="url" class="form-control resource-url-input" required placeholder="https://example.com/resource">
+                        <button type="button" class="btn btn-outline-danger remove-resource-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm add-resource-btn">
+                    <i class="bi bi-plus"></i> Add Resource
+                </button>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-danger btn-sm remove-topic-btn">
+                    <i class="bi bi-trash"></i> Remove Topic
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Add this modal for sharing a learning plan -->
+    <div class="modal fade" id="sharePlanModal" tabindex="-1" aria-labelledby="sharePlanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sharePlanModalLabel">Share Learning Plan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sharing this learning plan will make it visible on your profile to other users. They will be able to view and copy your plan to their own collection.</p>
+                    
+                    <div class="mb-3">
+                        <label for="planDescription" class="form-label">Add a brief description (optional)</label>
+                        <textarea class="form-control" id="planDescription" rows="3" placeholder="Describe what this learning plan is about..."></textarea>
+                    </div>
+                    
+                    <input type="hidden" id="planId" value="">
+                    <input type="hidden" id="isCurrentlyShared" value="false">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger d-none" id="makePrivateBtn">Make Private</button>
+                    <button type="button" class="btn btn-primary" id="sharePlanBtn">Share Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // Get the learning plans data from Thymeleaf model
+        const learningPlansData = /*[[${learningPlans}]]*/ [];
+        /*]]>*/
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load learning plans on page load
+            loadLearningPlans();
+            
+            // Initialize add topic buttons
+            document.getElementById('addTopicBtn').addEventListener('click', function() {
+                addTopic(document.getElementById('topicsContainer'));
+            });
+            
+            document.getElementById('editAddTopicBtn').addEventListener('click', function() {
+                addTopic(document.getElementById('editTopicsContainer'));
+            });
+            
+            document.getElementById('createPlanBtn').addEventListener('click', function() {
+                if (document.getElementById('topicsContainer').children.length === 0) {
+                    alert('Please add at least one topic to your learning plan.');
+                    return;
+                }
+                createLearningPlan();
+            });
+            
+            document.getElementById('saveEditBtn').addEventListener('click', function() {
+                if (document.getElementById('editTopicsContainer').children.length === 0) {
+                    alert('Please add at least one topic to your learning plan.');
+                    return;
+                }
+                updateLearningPlan();
+            });
+            
+            // Back to plans button
+            document.getElementById('back-to-plans-btn').addEventListener('click', function() {
+                document.getElementById('learning-plan-detail').style.display = 'none';
+                document.getElementById('learning-plans-list').style.display = 'block';
+            });
+            
+            // Add initial topic on modal show
+            $('#createPlanModal').on('show.bs.modal', function() {
+                document.getElementById('topicsContainer').innerHTML = '';
+                addTopic(document.getElementById('topicsContainer'));
+            });
+
+            // Handle share plan button clicks
+            const shareBtns = document.querySelectorAll('.share-plan-btn');
+            const sharePlanModal = new bootstrap.Modal(document.getElementById('sharePlanModal'));
+            
+            shareBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const planId = this.getAttribute('data-plan-id');
+                    const isShared = this.getAttribute('data-is-shared') === 'true';
+                    
+                    document.getElementById('planId').value = planId;
+                    document.getElementById('isCurrentlyShared').value = isShared;
+                    
+                    // Update modal based on current sharing status
+                    if (isShared) {
+                        document.getElementById('sharePlanModalLabel').textContent = 'Update Sharing Settings';
+                        document.getElementById('makePrivateBtn').classList.remove('d-none');
+                        document.getElementById('sharePlanBtn').textContent = 'Update Sharing';
+                    } else {
+                        document.getElementById('sharePlanModalLabel').textContent = 'Share Learning Plan';
+                        document.getElementById('makePrivateBtn').classList.add('d-none');
+                        document.getElementById('sharePlanBtn').textContent = 'Share Plan';
+                    }
+                    
+                    // Show the modal
+                    sharePlanModal.show();
+                });
+            });
+            
+            // Handle share plan submission
+            document.getElementById('sharePlanBtn').addEventListener('click', function() {
+                const planId = document.getElementById('planId').value;
+                const description = document.getElementById('planDescription').value;
+                
+                fetch(`/api/learning-plans/${planId}/share?shared=true&description=${encodeURIComponent(description)}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Close modal
+                        sharePlanModal.hide();
+                        
+                        // Show success alert
+                        showAlert('success', 'Plan is now shared on your profile!');
+                        
+                        // Update button
+                        updateShareButton(planId, true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('danger', 'Failed to share the plan. Please try again.');
+                });
+            });
+            
+            // Handle make private button
+            document.getElementById('makePrivateBtn').addEventListener('click', function() {
+                const planId = document.getElementById('planId').value;
+                
+                fetch(`/api/learning-plans/${planId}/share?shared=false`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Close modal
+                        sharePlanModal.hide();
+                        
+                        // Show success alert
+                        showAlert('success', 'Plan is now private.');
+                        
+                        // Update button
+                        updateShareButton(planId, false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('danger', 'Failed to update sharing settings. Please try again.');
+                });
+            });
+            
+            function updateShareButton(planId, isShared) {
+                const shareBtn = document.querySelector(`.share-plan-btn[data-plan-id="${planId}"]`);
+                if (shareBtn) {
+                    shareBtn.setAttribute('data-is-shared', isShared);
+                    
+                    // Update icon and text
+                    const icon = shareBtn.querySelector('i.bi');
+                    icon.className = isShared ? 'bi bi-unlock' : 'bi bi-lock';
+                    
+                    shareBtn.querySelector('span').textContent = isShared ? 'Make Private' : 'Share Plan';
+                    
+                    // Add a shared indicator to the plan card
+                    const planCard = shareBtn.closest('.card');
+                    if (planCard) {
+                        const shareIndicator = planCard.querySelector('.share-indicator');
+                        if (shareIndicator) {
+                            shareIndicator.style.display = isShared ? 'block' : 'none';
+                        } else if (isShared) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge bg-info share-indicator position-absolute top-0 end-0 m-2';
+                            badge.innerHTML = '<i class="bi bi-share"></i> Shared';
+                            planCard.style.position = 'relative';
+                            planCard.appendChild(badge);
+                        }
+                    }
+                }
+            }
+            
+            function showAlert(type, message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Insert at the top of the content
+                const container = document.querySelector('.container');
+                container.insertBefore(alertDiv, container.firstChild);
+                
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 5000);
+            }
+        });
+        
+        function loadLearningPlans() {
+            const plansContainer = document.getElementById('plans-container');
+            plansContainer.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            
+            if (learningPlansData && Array.isArray(learningPlansData) && learningPlansData.length > 0) {
+                // Use the Thymeleaf-provided data
+                displayLearningPlans(learningPlansData);
+            } else {
+                // Fallback to API fetch
+                fetch('/api/learning-plans')
+                    .then(response => response.json())
+                    .then(plans => {
+                        displayLearningPlans(plans);
+                    })
+                    .catch(error => {
+                        console.error('Error loading learning plans:', error);
+                        plansContainer.innerHTML = `
+                            <div class="col-12 text-center mt-5">
+                                <i class="bi bi-exclamation-triangle text-warning display-4"></i>
+                                <h3 class="mt-3">Error Loading Plans</h3>
+                                <p class="text-muted">There was an error loading your learning plans. Please try refreshing the page.</p>
+                            </div>
+                        `;
+                    });
+            }
+        }
+        
+        function displayLearningPlans(plans) {
+            const plansContainer = document.getElementById('plans-container');
+            plansContainer.innerHTML = '';
+            
+            if (!plans || plans.length === 0) {
+                plansContainer.innerHTML = `
+                    <div class="col-12 text-center mt-5">
+                        <i class="bi bi-journal-x display-4 text-muted"></i>
+                        <h3 class="mt-3">No Learning Plans Yet</h3>
+                        <p class="text-muted">Create your first learning plan to get started!</p>
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createPlanModal">
+                            <i class="bi bi-plus-circle"></i> Create New Plan
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            plans.forEach(plan => {
+                const progressPercentage = Math.round(plan.progressPercentage);
+                const deadlineDate = new Date(plan.deadline);
+                const formattedDeadline = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(deadlineDate);
+                
+                // Calculate deadline status class
+                const today = new Date();
+                const deadlineDaysAway = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                let deadlineClass = '';
+                
+                if (deadlineDaysAway < 0) {
+                    deadlineClass = 'deadline-past';
+                } else if (deadlineDaysAway <= 3) {
+                    deadlineClass = 'deadline-soon';
+                }
+                
+                const planCard = document.createElement('div');
+                planCard.className = 'col-lg-4 col-md-6 mb-4';
+                
+                // Add shared indicator if plan is shared
+                const sharedBadge = plan.shared ? 
+                    `<span class="badge bg-info share-indicator position-absolute top-0 end-0 m-2">
+                        <i class="bi bi-share"></i> Shared
+                    </span>` : '';
+                
+                planCard.innerHTML = `
+                    <div class="card plan-card ${deadlineClass}" style="position: relative;">
+                        ${sharedBadge}
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">${plan.title}</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-link text-dark" type="button" id="dropdownMenuButton-${plan.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-${plan.id}">
+                                    <a class="dropdown-item" href="/learning-plan/${plan.id}">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="editPlan('${plan.id}')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <button class="dropdown-item share-plan-btn" 
+                                            data-plan-id="${plan.id}" 
+                                            data-is-shared="${plan.shared}">
+                                        <i class="bi ${plan.shared ? 'bi-unlock' : 'bi-lock'}"></i>
+                                        <span>${plan.shared ? 'Make Private' : 'Share Plan'}</span>
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deletePlan('${plan.id}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="completion-text">${plan.completedTopics} of ${plan.topics.length} topics completed</div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%" 
+                                    aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100">
+                                    ${progressPercentage}%
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                <small class="text-muted">Deadline: ${formattedDeadline}</small>
+                            </p>
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="/learning-plan/${plan.id}" class="btn btn-success continue-learning-btn">
+                                    <i class="bi bi-play-fill"></i> Continue Learning
+                                </a>
+                                <div class="btn-group">
+                                    <button onclick="editPlan('${plan.id}')" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button onclick="deletePlan('${plan.id}')" class="btn btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                plansContainer.appendChild(planCard);
+            });
+            
+            // Attach event listeners to share buttons
+            const shareBtns = document.querySelectorAll('.share-plan-btn');
+            const sharePlanModal = new bootstrap.Modal(document.getElementById('sharePlanModal'));
+            
+            shareBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const planId = this.getAttribute('data-plan-id');
+                    const isShared = this.getAttribute('data-is-shared') === 'true';
+                    
+                    document.getElementById('planId').value = planId;
+                    document.getElementById('isCurrentlyShared').value = isShared;
+                    
+                    // Update modal based on current sharing status
+                    if (isShared) {
+                        document.getElementById('sharePlanModalLabel').textContent = 'Update Sharing Settings';
+                        document.getElementById('makePrivateBtn').classList.remove('d-none');
+                        document.getElementById('sharePlanBtn').textContent = 'Update Sharing';
+                    } else {
+                        document.getElementById('sharePlanModalLabel').textContent = 'Share Learning Plan';
+                        document.getElementById('makePrivateBtn').classList.add('d-none');
+                        document.getElementById('sharePlanBtn').textContent = 'Share Plan';
+                    }
+                    
+                    // Show the modal
+                    sharePlanModal.show();
+                });
+            });
+        }
+        
+        function viewPlanDetail(planId) {
+            fetch(`/api/learning-plans/${planId}`)
+                .then(response => response.json())
+                .then(plan => {
+                    document.getElementById('plan-detail-title').textContent = plan.title;
+                    document.getElementById('plan-completed-topics').textContent = plan.completedTopics;
+                    document.getElementById('plan-total-topics').textContent = plan.topics.length;
+                    
+                    // Format the deadline
+                    const deadline = new Date(plan.deadline);
+                    const formattedDeadline = deadline.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    document.getElementById('plan-deadline').textContent = formattedDeadline;
+                    
+                    // Set progress bar
+                    const progressPercentage = plan.progressPercentage.toFixed(0);
+                    const progressBar = document.getElementById('plan-progress-bar');
+                    progressBar.style.width = `${progressPercentage}%`;
+                    progressBar.setAttribute('aria-valuenow', progressPercentage);
+                    
+                    // Populate topics
+                    const topicsContainer = document.getElementById('plan-topics-container');
+                    topicsContainer.innerHTML = '';
+                    
+                    plan.topics.forEach(topic => {
+                        const topicElement = document.createElement('div');
+                        topicElement.className = `topic-card mb-3 ${topic.completed ? 'topic-completed' : ''}`;
+                        topicElement.id = `topic-${topic.id}`;
+                        
+                        const topicContent = `
+                            <div class="d-flex align-items-center mb-2">
+                                <input type="checkbox" class="topic-checkbox" 
+                                    id="topic-checkbox-${topic.id}" 
+                                    ${topic.completed ? 'checked' : ''} 
+                                    onchange="updateTopicStatus('${plan.id}', '${topic.id}', this.checked)">
+                                <h5 class="mb-0">${topic.name}</h5>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Estimated time: ${topic.estimatedMinutes} minutes</small>
+                            </div>
+                            <div class="mt-2">
+                                <strong>Resources:</strong>
+                                ${topic.resourceUrls.length > 0 ? 
+                                    topic.resourceUrls.map(url => `
+                                        <div class="resource-url">
+                                            <a href="${url}" target="_blank">${url}</a>
+                                        </div>
+                                    `).join('') : 
+                                    '<p class="text-muted">No resources added</p>'
+                                }
+                            </div>
+                        `;
+                        
+                        topicElement.innerHTML = topicContent;
+                        topicsContainer.appendChild(topicElement);
+                    });
+                    
+                    // Show detail view, hide list view
+                    document.getElementById('learning-plans-list').style.display = 'none';
+                    document.getElementById('learning-plan-detail').style.display = 'block';
+                })
+                .catch(error => console.error('Error loading plan details:', error));
+        }
+        
+        function updateTopicStatus(planId, topicId, completed) {
+            const url = `/api/learning-plans/${planId}/topics/${topicId}/completion?completed=${completed}`;
+            
+            fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Topic update response:', data);
+                
+                // Update UI to reflect changed status
+                const topicElement = document.getElementById(`topic-${topicId}`);
+                if (completed) {
+                    topicElement.classList.add('topic-completed');
+                } else {
+                    topicElement.classList.remove('topic-completed');
+                }
+                
+                // Update progress information
+                document.getElementById('plan-completed-topics').textContent = data.completedTopics;
+                document.getElementById('plan-total-topics').textContent = data.totalTopics;
+                
+                // Update progress bar
+                const progressPercentage = data.progressPercentage.toFixed(0);
+                const progressBar = document.getElementById('plan-progress-bar');
+                progressBar.style.width = `${progressPercentage}%`;
+                progressBar.setAttribute('aria-valuenow', progressPercentage);
+            })
+            .catch(error => console.error('Error updating topic status:', error));
+        }
+        
+        function addTopic(container, topicData = null) {
+            const topicCard = document.createElement('div');
+            topicCard.className = 'topic-card';
+            
+            if (topicData && topicData.id) {
+                topicCard.dataset.topicId = topicData.id;
+            }
+            
+            const topicContent = `
+                <div class="mb-3">
+                    <label class="form-label">Topic Name</label>
+                    <input type="text" class="form-control topic-name" required placeholder="e.g., HTML Basics"
+                        value="${topicData ? topicData.name : ''}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Resource URLs</label>
+                    <div class="resource-urls-container">
+                        ${topicData && topicData.resourceUrls && topicData.resourceUrls.length > 0 ? 
+                            topicData.resourceUrls.map(url => `
+                                <div class="input-group mb-2">
+                                    <input type="url" class="form-control resource-url-input" required 
+                                        placeholder="https://example.com/resource" value="${url}">
+                                    <button type="button" class="btn btn-outline-danger remove-resource-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            `).join('') : 
+                            `<div class="input-group mb-2">
+                                <input type="url" class="form-control resource-url-input" required 
+                                    placeholder="https://example.com/resource">
+                                <button type="button" class="btn btn-outline-danger remove-resource-btn">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>`
+                        }
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm add-resource-btn">
+                        <i class="bi bi-plus"></i> Add Resource
+                    </button>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-topic-btn">
+                        <i class="bi bi-trash"></i> Remove Topic
+                    </button>
+                </div>
+            `;
+            
+            topicCard.innerHTML = topicContent;
+            
+            // Add event listeners
+            topicCard.querySelector('.add-resource-btn').addEventListener('click', function() {
+                addResourceUrl(topicCard.querySelector('.resource-urls-container'));
+            });
+            
+            topicCard.querySelector('.remove-topic-btn').addEventListener('click', function() {
+                topicCard.remove();
+            });
+            
+            // Add event listeners to initial resource remove buttons
+            topicCard.querySelectorAll('.remove-resource-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.input-group').remove();
+                });
+            });
+            
+            container.appendChild(topicCard);
+        }
+        
+        function addResourceUrl(container, url = '') {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group mb-2';
+            
+            inputGroup.innerHTML = `
+                <input type="url" class="form-control resource-url-input" required 
+                    placeholder="https://example.com/resource" value="${url}">
+                <button type="button" class="btn btn-outline-danger remove-resource-btn">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+            
+            inputGroup.querySelector('.remove-resource-btn').addEventListener('click', function() {
+                inputGroup.remove();
+            });
+            
+            container.appendChild(inputGroup);
+        }
+        
+        function getFormData(formId, topicsContainerId) {
+            const planTitle = document.getElementById(formId === 'createPlanForm' ? 'planTitle' : 'editPlanTitle').value;
+            const deadline = document.getElementById(formId === 'createPlanForm' ? 'deadline' : 'editDeadline').value;
+            
+            const topics = [];
+            const topicCards = document.getElementById(topicsContainerId).querySelectorAll('.topic-card');
+            
+            topicCards.forEach(card => {
+                const topicName = card.querySelector('.topic-name').value;
+                const resourceInputs = card.querySelectorAll('.resource-url-input');
+                const resourceUrls = [];
+                
+                resourceInputs.forEach(input => {
+                    if (input.value.trim()) {
+                        resourceUrls.push(input.value.trim());
+                    }
+                });
+                
+                const topic = {
+                    name: topicName,
+                    resourceUrls: resourceUrls
+                };
+                
+                if (card.dataset.topicId) {
+                    topic.id = card.dataset.topicId;
+                }
+                
+                topics.push(topic);
+            });
+            
+            return {
+                title: planTitle,
+                deadline: deadline,
+                topics: topics
+            };
+        }
+        
+        function createLearningPlan() {
+            const formData = getFormData('createPlanForm', 'topicsContainer');
+            
+            fetch('/api/learning-plans', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create learning plan');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('createPlanModal'));
+                modal.hide();
+                
+                // Reload learning plans
+                loadLearningPlans();
+                
+                alert('Learning plan created successfully!');
+            })
+            .catch(error => {
+                console.error('Error creating learning plan:', error);
+                alert('Error creating learning plan. Please try again.');
+            });
+        }
+        
+        function editPlan(planId) {
+            fetch(`/api/learning-plans/${planId}`)
+                .then(response => response.json())
+                .then(plan => {
+                    document.getElementById('editPlanId').value = plan.id;
+                    document.getElementById('editPlanTitle').value = plan.title;
+                    
+                    // Format the date as YYYY-MM-DD for input[type="date"]
+                    const deadline = new Date(plan.deadline);
+                    const formattedDeadline = deadline.toISOString().split('T')[0];
+                    document.getElementById('editDeadline').value = formattedDeadline;
+                    
+                    // Clear existing topics
+                    document.getElementById('editTopicsContainer').innerHTML = '';
+                    
+                    // Add topics
+                    plan.topics.forEach(topic => {
+                        addTopic(document.getElementById('editTopicsContainer'), topic);
+                    });
+                    
+                    // Show modal
+                    var editModal = new bootstrap.Modal(document.getElementById('editPlanModal'));
+                    editModal.show();
+                })
+                .catch(error => {
+                    console.error('Error loading plan details for editing:', error);
+                    alert('Error loading plan details. Please try again.');
+                });
+        }
+        
+        function updateLearningPlan() {
+            const planId = document.getElementById('editPlanId').value;
+            const formData = getFormData('editLearningPlanForm', 'editTopicsContainer');
+            
+            fetch(`/api/learning-plans/${planId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update learning plan');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('editPlanModal'));
+                modal.hide();
+                
+                // Reload learning plans
+                loadLearningPlans();
+                
+                alert('Learning plan updated successfully!');
+            })
+            .catch(error => {
+                console.error('Error updating learning plan:', error);
+                alert('Error updating learning plan. Please try again.');
+            });
+        }
+        
+        function deletePlan(planId) {
+            if (confirm('Are you sure you want to delete this learning plan? This action cannot be undone.')) {
+                fetch(`/api/learning-plans/${planId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete learning plan');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Reload learning plans
+                    loadLearningPlans();
+                    
+                    alert('Learning plan deleted successfully!');
+                })
+                .catch(error => {
+                    console.error('Error deleting learning plan:', error);
+                    alert('Error deleting learning plan. Please try again.');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post | Learning Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* Navbar styling */
+        .bg-primary {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%) !important;
+        }
+        
+        .navbar {
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        /* Post media styles */
+        .media-preview {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .media-preview img, .media-preview video {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+        
+        .media-preview .delete-media {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .media-preview .delete-media:hover {
+            background-color: rgba(220,53,69,0.9);
+        }
+        
+        .upload-area {
+            border: 2px dashed #ced4da;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background-color: #e9ecef;
+            border-color: #6c757d;
+        }
+        
+        .media-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Edit Post</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Alert messages -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+                        <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
+                        <div th:if="${warning}" class="alert alert-warning" role="alert" th:text="${warning}"></div>
+                        
+                        <form th:action="@{'/profile/posts/' + ${post.id} + '/update'}" 
+                              method="post" 
+                              enctype="multipart/form-data" 
+                              class="needs-validation" 
+                              novalidate>
+                            
+                            <!-- Post Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" 
+                                          name="description" 
+                                          class="form-control" 
+                                          rows="4" 
+                                          required
+                                          th:text="${post.description}"></textarea>
+                                <div class="invalid-feedback">Please provide a description.</div>
+                            </div>
+                            
+                            <!-- Current Media -->
+                            <div class="mb-4" th:if="${post.hasMedia()}">
+                                <label class="form-label">Current Media</label>
+                                <div class="media-list">
+                                    <div th:each="media : ${post.mediaItems}" class="media-preview">
+                                        <!-- Image preview -->
+                                        <img th:if="${media.type == 'image'}" 
+                                             th:src="${media.url}" 
+                                             alt="Media preview">
+                                             
+                                        <!-- Video preview -->
+                                        <video th:if="${media.type == 'video'}" controls>
+                                            <source th:src="${media.url}" th:type="${media.contentType}">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        
+                                        <!-- Delete media button -->
+                                        <button type="button" 
+                                                class="delete-media"
+                                                th:attr="data-media-id=${media.id}, data-post-id=${post.id}"
+                                                onclick="confirmDeleteMedia(this)">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                        
+                                        <!-- Hidden input to track media deletion -->
+                                        <input type="checkbox" 
+                                               th:id="'delete-media-' + ${media.id}" 
+                                               name="deleteMediaIds" 
+                                               th:value="${media.id}" 
+                                               style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upload New Media -->
+                            <div class="mb-4">
+                                <label class="form-label">Add New Media</label>
+                                <div class="upload-area" onclick="document.getElementById('mediaFiles').click()">
+                                    <i class="bi bi-cloud-arrow-up display-4"></i>
+                                    <p class="mb-0 mt-2">Click to upload photos or videos</p>
+                                    <small class="text-muted">Maximum 3 files, each up to 5MB for images or 10MB for videos</small>
+                                </div>
+                                <input type="file" 
+                                       id="mediaFiles" 
+                                       name="mediaFiles" 
+                                       accept="image/jpeg,image/png,image/gif,video/mp4,video/webm" 
+                                       multiple 
+                                       class="form-control d-none"
+                                       onchange="previewFiles(this)">
+                                
+                                <!-- Preview for new files -->
+                                <div id="newMediaPreview" class="media-list mt-3"></div>
+                            </div>
+                            
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/profile}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation
+        (function() {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+        
+        // Preview uploaded files
+        function previewFiles(input) {
+            const previewContainer = document.getElementById('newMediaPreview');
+            previewContainer.innerHTML = '';
+            
+            const files = input.files;
+            if (!files || files.length === 0) return;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'media-preview';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.file = file;
+                    previewDiv.appendChild(img);
+                    
+                    const reader = new FileReader();
+                    reader.onload = (function(aImg) { 
+                        return function(e) { 
+                            aImg.src = e.target.result; 
+                        }; 
+                    })(img);
+                    reader.readAsDataURL(file);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.controls = true;
+                    
+                    const source = document.createElement('source');
+                    source.type = file.type;
+                    video.appendChild(source);
+                    
+                    previewDiv.appendChild(video);
+                    
+                    const reader = new FileReader();
+                    reader.onload = (function(aSource) { 
+                        return function(e) { 
+                            aSource.src = e.target.result; 
+                        }; 
+                    })(source);
+                    reader.readAsDataURL(file);
+                }
+                
+                // Remove button for previewed file
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'delete-media';
+                removeBtn.innerHTML = '<i class="bi bi-x"></i>';
+                removeBtn.onclick = function() {
+                    previewDiv.remove();
+                    
+                    // Clear the specific file from input
+                    // Note: This is tricky with multiple files, so we just show it's removed visually
+                    // The user would need to re-select all files they want if they remove one
+                };
+                
+                previewDiv.appendChild(removeBtn);
+                previewContainer.appendChild(previewDiv);
+            }
+        }
+        
+        // Handle deleting existing media
+        function confirmDeleteMedia(button) {
+            const mediaId = button.getAttribute('data-media-id');
+            const postId = button.getAttribute('data-post-id');
+            
+            if (confirm('Are you sure you want to remove this media?')) {
+                // Mark the media for deletion by checking the hidden checkbox
+                document.getElementById('delete-media-' + mediaId).checked = true;
+                
+                // Visually hide the media preview
+                button.closest('.media-preview').style.opacity = '0.5';
+                button.style.backgroundColor = 'rgba(220,53,69,0.9)';
+                button.innerHTML = '<i class="bi bi-check"></i>';
+                button.onclick = function() {
+                    // Allow to undo the deletion
+                    document.getElementById('delete-media-' + mediaId).checked = false;
+                    button.closest('.media-preview').style.opacity = '1';
+                    button.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    button.innerHTML = '<i class="bi bi-x"></i>';
+                    button.onclick = function() { confirmDeleteMedia(button); };
+                };
+            }
+        }
+    </script>
+</body>
+</html> 
