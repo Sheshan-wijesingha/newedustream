@@ -603,7 +603,7 @@
                 });
             });
             
-            // Delete notification
+            // Delete notifications
             $(document).on('click', '.delete-notification-btn', function(e) {
                 e.preventDefault();
                 const notificationId = $(this).closest('.notification-item').data('id');
@@ -622,7 +622,7 @@
                 }
             });
             
-            // Mark all as read
+            // Mark all as read 
             $('#markAllAsRead').click(function(e) {
                 e.preventDefault();
                 
@@ -638,7 +638,7 @@
                 });
             });
             
-            // Pagination click
+           
             $(document).on('click', '.pagination .page-link', function(e) {
                 e.preventDefault();
                 const page = $(this).data('page');

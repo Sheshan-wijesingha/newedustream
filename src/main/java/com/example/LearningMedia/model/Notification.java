@@ -11,10 +11,10 @@ public class Notification {
     @Id
     private String id;
     
-    private String userId;  // User receiving the notification
-    private String senderId; // User who triggered the notification (can be null for system notifications)
-    private String senderName; // Name of the sender (for display purposes)
-    private String senderProfilePicture; // Profile picture of the sender
+    private String userId;  
+    private String senderId; 
+    private String senderName; 
+    private String senderProfilePicture; 
     
     private String targetId; // ID of the related object (post, comment, learning plan)
     private NotificationType type; // Type of notification
@@ -28,12 +28,12 @@ public class Notification {
         LEARNING_PLAN_COMPLETED
     }
     
-    // Default constructor
+   
     public Notification() {
         this.createdAt = LocalDateTime.now();
     }
     
-    // Constructor with required fields
+    // Constructor with required fields for notifications
     public Notification(String userId, String senderId, String senderName, String senderProfilePicture, 
                      String targetId, NotificationType type, String content) {
         this();
@@ -46,7 +46,7 @@ public class Notification {
         this.content = content;
     }
     
-    // Getters and Setters
+    
     public String getId() {
         return id;
     }
