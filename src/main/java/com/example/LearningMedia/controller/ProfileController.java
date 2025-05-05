@@ -201,11 +201,11 @@ public class ProfileController {
                     name = attributes.get("given_name") + " " + attributes.get("family_name");
                 }
                 
-                // Create or retrieve user
+                // Create or retrieve user from OAuth2
                 currentUser = userService.processOAuthPostLogin(email, name, oauthToken.getAuthorizedClientRegistrationId());
                 isOwnProfile = currentUser.getId().equals(profileUser.getId());
                 
-                // Set following status if not own profile
+                // Set following status 
                 if (!isOwnProfile) {
                     model.addAttribute("isFollowing", 
                             userService.isFollowing(currentUser.getId(), profileUser.getId()));
@@ -214,7 +214,7 @@ public class ProfileController {
                 currentUser = currentUserOpt.get();
                 isOwnProfile = currentUser.getId().equals(profileUser.getId());
                 
-                // Set following status if not own profile
+                // Set following status i
                 if (!isOwnProfile) {
                     model.addAttribute("isFollowing", 
                             userService.isFollowing(currentUser.getId(), profileUser.getId()));
