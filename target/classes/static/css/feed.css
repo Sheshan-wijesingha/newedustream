@@ -1,0 +1,169 @@
+/* Feed styling */
+.post-card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.post-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.post-card .card-header {
+    padding: 15px 20px;
+    background: white;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.post-media {
+    border-radius: 10px;
+    max-height: 400px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.post-actions {
+    margin-top: 15px;
+}
+
+.post-actions .btn {
+    padding: 5px 10px;
+    margin-right: 15px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.post-actions .btn:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.post-actions .btn i {
+    margin-right: 5px;
+}
+
+    background-color: rgba(0,0,0,0.03);
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin-bottom: 3px;
+}
+
+.comments-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Toast container */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+/* Create post form */
+.create-post-card {
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.create-post-card .card-body {
+    padding: 20px;
+}
+
+.create-post-form textarea {
+    border-radius: 20px;
+    padding: 15px;
+    resize: none;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.create-post-form textarea:focus {
+    box-shadow: none;
+    border-color: #4481eb;
+}
+
+.create-post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.media-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.media-preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.media-preview-item img, 
+.media-preview-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-preview-item .remove-media {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Feed container */
+.feed-container {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* Responsive fixes */
+@media (max-width: 576px) {
+    .post-card .card-header {
+        padding: 10px 15px;
+    }
+    
+    .post-card .card-body {
+        padding: 15px;
+    }
+    
+    .media-preview-item {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Carousel styling */
+.carousel {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.carousel-item img,
+.carousel-item video {
+    max-height: 400px;
+    object-fit: contain;
+} 

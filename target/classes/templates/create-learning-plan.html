@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Learning Plan - Learning Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+        
+        /* Decorative elements */
+        .shape {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .shape-1 {
+            top: 5%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape-2 {
+            bottom: 10%;
+            right: 5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: rgba(255, 255, 255, 0.15);
+            animation: float 7s ease-in-out infinite reverse;
+        }
+        
+        .shape-3 {
+            top: 50%;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+            border-radius: 30% 70% 46% 54% / 30% 44% 56% 70%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%) !important;
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 70%;
+        }
+        
+        .card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transition: all 0.4s ease;
+            margin-bottom: 25px;
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%) !important;
+            padding: 20px 25px;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4481eb 0%, #04befe 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #04befe 0%, #4481eb 100%);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            border-color: #86b7fe;
+        }
+        
+        .topic-card {
+            background-color: rgba(245, 245, 255, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(200, 200, 255, 0.4);
+        }
+        
+        .btn-sm {
+            border-radius: 30px;
+            font-size: 0.8rem;
+            padding: 5px 15px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    
+    <!-- Replace with the navbar fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div class="container mt-5">
+        <div class="page-header">
+            <h2 class="page-title">Create New Learning Plan</h2>
+            <a href="/learning-plans" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left"></i> Back to Learning Plans
+            </a>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card animate__animated animate__fadeInUp">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-journal-plus"></i> New Learning Plan</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="learningPlanForm">
+                            <div class="mb-3">
+                                <label for="planTitle" class="form-label">Plan Title</label>
+                                <input type="text" class="form-control" id="planTitle" required placeholder="e.g., Web Development Fundamentals">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deadline" class="form-label">Deadline</label>
+                                <input type="date" class="form-control" id="deadline" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Topics</label>
+                                <div id="topicsContainer">
+                                    <!-- Topics will be added here dynamically -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mt-2" id="addTopicBtn">
+                                    <i class="bi bi-plus-circle"></i> Add Topic
+                                </button>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="/learning-plans" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Save Learning Plan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic Template (hidden) -->
+    <template id="topicTemplate">
+        <div class="topic-card">
+            <div class="mb-3">
+                <label class="form-label">Topic Name</label>
+                <input type="text" class="form-control topic-name" required placeholder="e.g., HTML Basics">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Resource URLs</label>
+                <div class="resource-urls-container">
+                    <div class="input-group mb-2">
+                        <input type="url" class="form-control resource-url-input" required placeholder="https://example.com/resource">
+                        <button type="button" class="btn btn-outline-danger remove-resource-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm add-resource-btn">
+                    <i class="bi bi-plus"></i> Add Resource
+                </button>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-danger btn-sm remove-topic-btn">
+                    <i class="bi bi-trash"></i> Remove Topic
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get form elements
+            const learningPlanForm = document.getElementById('learningPlanForm');
+            const topicsContainer = document.getElementById('topicsContainer');
+            const addTopicBtn = document.getElementById('addTopicBtn');
+            
+            // Add topic to form
+            function addTopic() {
+                const template = document.getElementById('topicTemplate');
+                const topicElement = template.content.cloneNode(true);
+                
+                const topicCard = topicElement.querySelector('.topic-card');
+                const resourceUrlsContainer = topicElement.querySelector('.resource-urls-container');
+                const addResourceBtn = topicElement.querySelector('.add-resource-btn');
+                const removeTopicBtn = topicElement.querySelector('.remove-topic-btn');
+                
+                // Add event listener for adding resource URLs
+                addResourceBtn.addEventListener('click', function() {
+                    addResourceUrl(resourceUrlsContainer);
+                });
+                
+                // Add event listener for removing topic
+                removeTopicBtn.addEventListener('click', function() {
+                    topicCard.remove();
+                });
+                
+                topicsContainer.appendChild(topicElement);
+            }
+            
+            // Add resource URL input field
+            function addResourceUrl(container, url = '') {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group mb-2';
+                
+                const urlInput = document.createElement('input');
+                urlInput.type = 'url';
+                urlInput.className = 'form-control resource-url-input';
+                urlInput.required = true;
+                urlInput.placeholder = 'https://example.com/resource';
+                urlInput.value = url;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-outline-danger remove-resource-btn';
+                removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                
+                removeBtn.addEventListener('click', function() {
+                    inputGroup.remove();
+                });
+                
+                inputGroup.appendChild(urlInput);
+                inputGroup.appendChild(removeBtn);
+                container.appendChild(inputGroup);
+            }
+            
+            // Add topic button click event
+            addTopicBtn.addEventListener('click', function() {
+                addTopic();
+            });
+            
+            // Get form data
+            function getFormData() {
+                const planTitle = document.getElementById('planTitle').value;
+                const deadline = document.getElementById('deadline').value;
+                
+                const topics = [];
+                const topicCards = topicsContainer.querySelectorAll('.topic-card');
+                
+                topicCards.forEach(card => {
+                    const topicName = card.querySelector('.topic-name').value;
+                    const resourceInputs = card.querySelectorAll('.resource-url-input');
+                    const resourceUrls = [];
+                    
+                    resourceInputs.forEach(input => {
+                        if (input.value.trim()) {
+                            resourceUrls.push(input.value.trim());
+                        }
+                    });
+                    
+                    topics.push({
+                        name: topicName,
+                        resourceUrls: resourceUrls
+                    });
+                });
+                
+                return {
+                    title: planTitle,
+                    deadline: deadline,
+                    topics: topics
+                };
+            }
+            
+            // Submit form
+            learningPlanForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (topicsContainer.children.length === 0) {
+                    alert('Please add at least one topic to your learning plan.');
+                    return;
+                }
+                
+                const formData = getFormData();
+                
+                // Send data to server
+                axios.post('/api/learning-plans', formData)
+                    .then(function(response) {
+                        alert('Learning plan created successfully!');
+                        window.location.href = '/learning-plans';
+                    })
+                    .catch(function(error) {
+                        console.error('Error creating learning plan:', error);
+                        
+                        // Extract error message from response if available
+                        let errorMessage = 'Error creating learning plan. Please try again.';
+                        if (error.response && error.response.data) {
+                            if (error.response.data.error) {
+                                errorMessage = error.response.data.error;
+                            } else if (typeof error.response.data === 'string') {
+                                errorMessage = error.response.data;
+                            }
+                        }
+                        
+                        alert(errorMessage);
+                    });
+            });
+            
+            // Add initial topic
+            addTopic();
+        });
+    </script>
+</body>
+</html> 
