@@ -88,7 +88,7 @@ public class AuthController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+    // Check if email exists
     @GetMapping("/check-email")
     public ResponseEntity<?> checkEmailExists(@RequestParam String email) {
         boolean exists = userService.existsByEmail(email);
