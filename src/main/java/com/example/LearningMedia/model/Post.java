@@ -54,7 +54,7 @@ public class Post {
             this.contentType = contentType;
         }
         
-        // Getters and setters
+        
         public String getId() {
             return id;
         }
@@ -96,7 +96,7 @@ public class Post {
         }
     }
     
-    // Getters and setters
+
     public String getId() {
         return id;
     }

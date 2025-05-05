@@ -45,11 +45,11 @@ public class PostResponse {
         // Set canEdit flag - true if current user is the creator of the post
         response.setCanEdit(post.getUserId().equals(currentUserId));
         
-        // Set like-related fields
+        
         response.setLikeCount(post.getLikeCount());
         response.setLikedByCurrentUser(post.isLikedByUser(currentUserId));
         
-        // Convert Post.Media to MediaItem
+        // Convert Post.Media to MediaItem (media items)
         if (post.getMediaItems() != null) {
             response.setMediaItems(
                 post.getMediaItems().stream()
@@ -65,7 +65,7 @@ public class PostResponse {
             );
         }
         
-        // Calculate time ago
+        // Calculate time ago (time since post was created)
         response.setTimeAgo(calculateTimeAgo(post.getCreatedAt()));
         
         return response;

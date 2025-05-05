@@ -20,7 +20,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     boolean existsByUsername(String username);
     
     /**
-     * Find all user IDs that the specified user is following
+     * 
      * 
      * @param userId The ID of the user whose followed users we want to find
      * @return A list of user IDs that the specified user is following
