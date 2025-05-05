@@ -39,12 +39,12 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("Passwords do not match");
             }
             
-            // Check if user is at least 15 years old
+            // Check if user is at least 15 years old Age validation
             if (!registrationDto.isAtLeast15YearsOld()) {
                 return ResponseEntity.badRequest().body("User must be at least 15 years old");
             }
             
-            // Check if email exists
+            // Check if email exists Email validation
             if (userService.existsByEmail(registrationDto.getEmail())) {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
