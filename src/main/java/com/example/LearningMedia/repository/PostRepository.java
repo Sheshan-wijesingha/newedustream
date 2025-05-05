@@ -17,4 +17,3 @@ public interface PostRepository extends MongoRepository<Post, String> {
     
     List<Post> findByUserIdInOrderByCreatedAtDesc(List<String> userIds, Pageable pageable);
 } 
-// Post repository
